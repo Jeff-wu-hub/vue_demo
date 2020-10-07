@@ -1,24 +1,4 @@
-# demo
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+#vue_demo
+##电商项目模板前后台
+###主要利用vue_element ui 组件建立模板
+利用axios构建json数据交换

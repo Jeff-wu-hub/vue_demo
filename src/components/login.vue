@@ -3,8 +3,9 @@
     <div class="main">
       <div class="photo"><img src="#" alt="头像图片"></div>
       <div class="form">
-        <el-input class="input"></el-input>
-        <el-input class="input"></el-input>
+        <el-input class="input" v-model="user"></el-input>
+        <el-input class="input" v-model="passwd" type="password"></el-input>
+        <el-button class="button" @click="login">Login</el-button>
       </div>
     </div>
   </div>
@@ -33,9 +34,24 @@
   .input{
     margin-top: 50px;
   }
+  .button{
+    position: relative;
+    margin-top: 30px;
+    left: 50%;
+    transform: translate(-50%);
+  }
 </style>
 <script>
 export default {
-
+  data () {
+    return {
+      user: '',
+      passwd: ''
+    }
+  },
+  methods: {
+    login () {
+    }
+  }
 }
 </script>
