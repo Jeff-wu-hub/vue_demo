@@ -35,9 +35,7 @@
   top: -50px;
   left: 50%;
   transform: translate(-50%);
-  border-top:solid 0.5px;
-  box-sizing: border-box;
-
+  border:solid 2px;
   }
   .photo img{
     width: 100%;
