@@ -78,7 +78,7 @@ export default {
   methods: {
     // 登陆方法
     login () {
-      alert(this.user)
+      this.$router.push('/home')
     }
   }
 }
