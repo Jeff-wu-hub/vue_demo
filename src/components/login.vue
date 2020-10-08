@@ -5,8 +5,8 @@
       <div class="text"><h2>欢迎登陆XX管理系统</h2></div>
       <!-- 登陆表单 -->
       <div class="form">
-        <el-input class="input" v-model="user" prefix-icon="el-icon-user" placeholder="请输入账号" ></el-input>
-        <el-input class="input" v-model="passwd" placeholder="请输入密码" prefix-icon="el-icon-key
+        <el-input class="input" v-model="log.username" prefix-icon="el-icon-user" placeholder="请输入账号" ></el-input>
+        <el-input class="input" v-model="log.password" placeholder="请输入密码" prefix-icon="el-icon-key
 " @keyup.enter.native="login" type="password"></el-input>
         <el-button class="button" @click="login" >Login</el-button>
       </div>
@@ -70,15 +70,22 @@
 export default {
   data () {
     return {
-    // 账号密码
-      user: '',
-      passwd: ''
+      log: {
+        user: '',
+        password: ''
+      }
     }
   },
   methods: {
     // 登陆方法
     login () {
-      this.$router.push('/home')
+      this.$http.post('login', this.log).then(res => {
+        if (res.data.meta.status === 400) this.$message.error('用户名或密码错误，请重试！')
+        else if (res.data.meta.status === 200) {
+          this.$message.success('登陆成功！')
+          this.$router.push('/home')
+        }
+      })
     }
   }
 }

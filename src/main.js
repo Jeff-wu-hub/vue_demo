@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
+
 import {
   Pagination,
   Dialog,
@@ -81,6 +82,10 @@ import {
   Message,
   Notification
 } from 'element-ui'
+import qs from 'qs'
+import axios from 'axios'
+axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+Vue.prototype.$http = axios
 
 Vue.use(Pagination)
 Vue.use(Dialog)
@@ -157,7 +162,7 @@ Vue.use(PageHeader)
 Vue.use(CascaderPanel)
 
 Vue.use(Loading.directive)
-
+Vue.prototype.$qs = qs
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
