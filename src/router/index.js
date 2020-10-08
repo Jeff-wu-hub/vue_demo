@@ -24,7 +24,7 @@ const router = new VueRouter({
 // 挂在路由守卫
 
 router.beforeEach((to, from, next) => {
-  if (to.path === '/')  next()
+  if (to.path === '/') return next()
   const str = window.sessionStorage.getItem('token')
   if (!str) return next('/')
   next()
