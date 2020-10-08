@@ -10,7 +10,7 @@
   <el-container>
     <el-aside width="200px" class="aside">
     <el-menu
-      default-active="2"
+      :default-active="activeName"
       class="el-menu-vertical-demo"
       background-color="#363233"
       text-color="#fff"
@@ -68,17 +68,18 @@
     border-right:none;
 }
 .main{
-    background-color: rgb(87, 85, 85);
+    background-color: aliceblue;
 }
 </style>
 <script>
 export default {
   created () {
     this.getInfo()
+    this.getActive()
   },
   data () {
     return {
-      activeName: '1',
+      activeName: '',
       menu: [],
       icon: ['el-icon-s-custom', 'el-icon-coordinate', 'el-icon-shopping-bag-2', 'el-icon-chat-dot-square', 'el-icon-pie-chart']
     }
@@ -91,11 +92,13 @@ export default {
     getInfo () {
       this.$http.get('menus').then(res => {
         this.menu = res.data.data
-        console.log(res.data.data)
       })
     },
     sessionstore (e) {
-      this.$message.success('' + e.index)
+      window.sessionStorage.setItem('active', e.index)
+    },
+    getActive () {
+      this.activeName = window.sessionStorage.getItem('active')
     }
   }
 }
