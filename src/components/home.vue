@@ -23,7 +23,7 @@
           <i :class="item.i"></i>
           <span>{{item.title}}</span>
         </template>
-          <el-menu-item index="1-1">
+          <el-menu-item :index="item.id+'1'">
               <template slot="title">
                   <i :class="item.i"></i>
                   <span>{{item.title}}</span>
@@ -74,6 +74,9 @@
 </style>
 <script>
 export default {
+  created () {
+    this.getInfo()
+  },
   data () {
     return {
       activeName: '1',
@@ -90,6 +93,11 @@ export default {
     signout () {
       this.$router.push('/')
       window.sessionStorage.clear()
+    },
+    getInfo () {
+      this.$http.get('menus').then(res => {
+        console.log(res)
+      })
     }
   }
 }

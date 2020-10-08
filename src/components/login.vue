@@ -82,10 +82,9 @@ export default {
       this.$http.post('login', this.log).then(res => {
         if (res.data.meta.status !== 200) this.$message.error('用户名或密码错误，请重试！')
         else if (res.data.meta.status === 200) {
-          this.$message.success('登陆成功！')
-          console.log(res)
-          this.$router.push('/home')
           window.sessionStorage.setItem('token', res.data.data.token)
+          this.$message.success('登陆成功！')
+          this.$router.push('/home')
         }
       })
     }
