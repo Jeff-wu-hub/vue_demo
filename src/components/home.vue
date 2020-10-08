@@ -89,6 +89,7 @@ export default {
   methods: {
     signout () {
       this.$router.push('/')
+      window.sessionStorage.clear()
     }
   }
 }
