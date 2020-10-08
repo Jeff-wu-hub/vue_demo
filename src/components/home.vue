@@ -12,27 +12,26 @@
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       background-color="#363233"
       text-color="#fff"
       active-text-color="#ffd04b"
+      router="true"
       >
       <el-submenu :index="item.id" v-for="item in menu" :key="item.id">
         <template slot="title">
-          <i :class="item.i"></i>
-          <span>{{item.title}}</span>
+          <i :class="icon[item.order-1]"></i>
+          <span>{{item.authName}}</span>
         </template>
-          <el-menu-item :index="item.id+'1'">
+          <el-menu-item :index="'/'+it.path" v-for="it in item.children" :key="it.id" @click="sessionstore">
               <template slot="title">
-                  <i :class="item.i"></i>
-                  <span>{{item.title}}</span>
+                  <i class="el-icon-s-opportunity"></i>
+                  <span>{{it.authName}}</span>
               </template>
           </el-menu-item>
       </el-submenu>
     </el-menu>
     </el-aside>
-    <el-main class="main">Main</el-main>
+    <el-main class="main"><router-view></router-view></el-main>
   </el-container>
 </el-container>
 </template>
@@ -80,13 +79,8 @@ export default {
   data () {
     return {
       activeName: '1',
-      menu: [
-        { id: '1', title: '权限管理', path: 'rights', i: 'el-icon-s-custom' },
-        { id: '2', title: '商品管理', path: 'goods', i: 'el-icon-s-goods' },
-        { id: '3', title: '订单管理', path: 'shoplist', i: 'el-icon-receiving' },
-        { id: '4', title: '数据统计', path: 'datacom', i: 'el-icon-pie-chart' },
-        { id: '5', title: '库存管理', path: 'product', i: 'el-icon-box' }
-      ]
+      menu: [],
+      icon: ['el-icon-s-custom', 'el-icon-coordinate', 'el-icon-shopping-bag-2', 'el-icon-chat-dot-square', 'el-icon-pie-chart']
     }
   },
   methods: {
@@ -96,8 +90,12 @@ export default {
     },
     getInfo () {
       this.$http.get('menus').then(res => {
-        console.log(res)
+        this.menu = res.data.data
+        console.log(res.data.data)
       })
+    },
+    sessionstore (e) {
+      this.$message.success('' + e.index)
     }
   }
 }
