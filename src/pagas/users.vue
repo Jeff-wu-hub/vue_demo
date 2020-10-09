@@ -142,7 +142,6 @@ export default {
         this.tableData = res.data.data.users
         this.total = res.data.data.total
         this.page.pagenum = res.data.data.pagenum
-        console.log(res.data.data)
       })
       this.loading = false
     },
