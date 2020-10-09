@@ -9,48 +9,23 @@
 <!--    卡片-->
 <el-card class="box-card">
     <div class="text item">
-        <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input placeholder="请输入内容" v-model="page.query" class="input-with-select" @input="getUserList">
+            <el-button slot="append" type="success" @click="reback">重置</el-button>
         </el-input>
+        <el-button type="primary" style="margin-left: 30px" @click="addUser">添加用户</el-button>
     </div>
-    <el-table
-            :data="tableData"
-            border
-            style="width: 100%">
-        <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="email"
-                label="邮箱"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="tel"
-                label="电话"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="role"
-                label="角色"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="sign"
-                label="状态"
-                width="180">
-            <el-switch
-                    v-model="value"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949">
-            </el-switch>
-        </el-table-column>
-        <el-table-column
-                prop="setting"
-                label="操作"
-                width="180">
+    <el-table :data="tableData" border v-loading="loading">
+        <el-table-column prop="username" label="姓名"></el-table-column>
+        <el-table-column prop="email" label="邮箱" ></el-table-column>
+        <el-table-column prop="mobile" label="电话"></el-table-column>
+        <el-table-column prop="role_name" label="角色" ></el-table-column>
+        <el-table-column prop="sign" label="状态" align="center"><template slot-scope="scope"><el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949" @change="changeState(scope.row)"></el-switch></template></el-table-column>
+        <el-table-column prop="setting" label="操作" width="250" align="center">
+            <el-button type="primary" icon="el-icon-edit"></el-button>
+            <el-button type="warning" icon="el-icon-delete"></el-button>
+            <el-tooltip  effect="dark" content="分配角色" placement="top">
+                <el-button type="primary" icon="el-icon-aim"></el-button>
+            </el-tooltip>
         </el-table-column>
     </el-table>
     <div class="block">
@@ -58,11 +33,11 @@
         <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-sizes="[100, 200, 300, 400]"
-                :page-size="100"
+                :current-page="page.pagenum"
+                :page-sizes="[1, 2, 5, 10]"
+                :page-size="page.pagesize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
+                :total="total">
         </el-pagination>
     </div>
 </el-card>
@@ -73,19 +48,14 @@ export default {
   data () {
     return {
       page: {
-        pagenum: '1',
-        pagesize: '2'
+        query: '',
+        pagenum: 1,
+        pagesize: 1
       },
-      currentPage: 4,
-      value: true,
+      loading: true,
+      total: 0,
       input: '',
-      tableData: [{
-        email: '15809812381@163.com',
-        name: '吴广帅',
-        address: '上海市普陀区金沙江路 1518 弄',
-        tel: '15809812381',
-        role: '管理员'
-      }]
+      tableData: [{}]
     }
   },
   created () {
@@ -93,15 +63,30 @@ export default {
   },
   methods: {
     getUserList () {
-      this.$http.get('users', this.page).then(res => {
-        console.log(res)
+      this.$http.get('users', { params: this.page }).then(res => {
+        this.tableData = res.data.data.users
+        this.total = res.data.data.total
+        this.page.pagenum = res.data.data.pagenum
+        console.log(res.data.data)
       })
+      this.loading = false
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.page.pagesize = val
+      this.getUserList()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.page.pagenum = val
+      this.getUserList()
+    },
+    addUser () {
+    },
+    changeState (e) {
+      this.$http.put(`users/${e.id}/state/${e.mg_state}`)
+    },
+    reback () {
+      this.page.query = ''
+      this.getUserList()
     }
   }
 }
