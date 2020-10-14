@@ -21,11 +21,13 @@
         <el-table-column prop="role_name" label="角色" ></el-table-column>
         <el-table-column prop="sign" label="状态" align="center"><template slot-scope="scope"><el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949" @change="changeState(scope.row)"></el-switch></template></el-table-column>
         <el-table-column prop="setting" label="操作" width="250" align="center">
-            <el-button type="primary" icon="el-icon-edit"></el-button>
-            <el-button type="warning" icon="el-icon-delete"></el-button>
-            <el-tooltip  effect="dark" content="分配角色" placement="top">
-                <el-button type="primary" icon="el-icon-aim"></el-button>
-            </el-tooltip>
+            <template slot-scope="scope">
+                <el-button type="primary" icon="el-icon-edit"></el-button>
+                <el-button type="warning" icon="el-icon-delete" @click="deleteuser(scope.row.id)"></el-button>
+                <el-tooltip  effect="dark" content="分配角色" placement="top">
+                    <el-button type="primary" icon="el-icon-aim"></el-button>
+                </el-tooltip>
+            </template>
         </el-table-column>
     </el-table>
     <div class="block">
@@ -186,6 +188,14 @@ export default {
           })
         }
       })
+    },
+    deleteuser (e) {
+      console.log(e)
+      this.$http.delete(`users/${e}`).then(res => {
+        console.log(res)
+        this.$message.success(res.data.meta.msg)
+      })
+      location.reload()
     }
   }
 }
