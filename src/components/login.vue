@@ -7,7 +7,7 @@
       <div class="form">
         <el-input class="input" v-model="log.username" prefix-icon="el-icon-user" placeholder="请输入账号" ></el-input>
         <el-input class="input" v-model="log.password" placeholder="请输入密码" prefix-icon="el-icon-key
-" @keyup.enter.native="login" type="password"></el-input>
+" @keyup.enter.native="login" type="password" id=""></el-input>
         <el-button class="button" @click="login" >Login</el-button>
       </div>
     </div>
