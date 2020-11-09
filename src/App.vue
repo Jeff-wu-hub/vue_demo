@@ -12,6 +12,8 @@ body,
 .el-container {
   padding: 0px;
   margin: 0px;
+  width: 100%;
   height: 100%;
+  overflow-y: hidden;
 }
 </style>

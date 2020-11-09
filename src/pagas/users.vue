@@ -217,7 +217,6 @@ export default {
         this.tableData = res.data.data.users
         this.total = res.data.data.total
         this.page.pagenum = res.data.data.pagenum
-        console.log(res.data.data)
       })
       this.loading = false
     },
@@ -282,7 +281,6 @@ export default {
             email: this.EditForm.email,
             mobile: this.EditForm.mobile
           })
-          console.log(res)
           if (res.meta.status === 200) {
             this.$message.success('更新成功!')
             this.EditdialogVisible = false
@@ -301,15 +299,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const { data: res } = this.$http.delete('users/' + e.id)
-        if (res.meta.status === 200) {
-          this.$message.success('删除成功')
+        this.$http.delete('users/' + e.id).then(res => {
+          this.$message.success('删除成功!')
+          console.log(res)
           this.getUserList()
-        } else {
-          return this.$message.error('删除失败')
-        }
+        }).catch(() => {
+          this.$message.error('删除失败!')
+        })
       }).catch(() => {
-        this.$message.info('取消操作')
+        this.$message.info('取消操作!')
       })
     }
   }
