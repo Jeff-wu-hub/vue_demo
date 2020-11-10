@@ -23,27 +23,27 @@
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        rightsList: []
-      }
-    },
-    methods: {
-      getRights (e) {
-        this.$http.get('/rights/' + e).then(res => {
-          console.log(res.data.data)
-          this.rightsList = res.data.data
-        }).catch(() => {
-          this.$message.error('请求失败')
-        })
-      }
-    },
-    mounted () {
-      this.getRights('list')
-    },
-    watch: {}
-  }
+export default {
+  data () {
+    return {
+      rightsList: []
+    }
+  },
+  methods: {
+    getRights (e) {
+      this.$http.get('/rights/' + e).then(res => {
+        console.log(res.data.data)
+        this.rightsList = res.data.data
+      }).catch(() => {
+        this.$message.error('请求失败')
+      })
+    }
+  },
+  mounted () {
+    this.getRights('list')
+  },
+  watch: {}
+}
 </script>
 <style>
   .content {
