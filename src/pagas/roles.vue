@@ -63,39 +63,39 @@
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        rolesList: []
-      }
-    },
-    methods: {
-      async getRoles () {
-        const { data: res } = await this.$http.get('/roles')
-        this.rolesList = res.data
-      },
-      async remoteTag (roles, id) {
-        // 弹框提示是否删除
-        const result = await this.$confirm('是否删除', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'waring'
-        }).catch(e => console.log(e))
-        if (result !== 'confirm') {
-          return this.$message.info('取消删除') // 结束函数运行
-        }
-        const { data: res } = await this.$http.delete(`roles/${roles}/rights/${id}`)
-        if (res.meta.status === 200) {
-          this.getRoles()
-          return this.$message.success('删除成功！')
-        }
-        this.$message.error('删除失败!')
-      }
-    },
-    mounted () {
-      this.getRoles()
+export default {
+  data () {
+    return {
+      rolesList: []
     }
+  },
+  methods: {
+    async getRoles () {
+      const { data: res } = await this.$http.get('/roles')
+      this.rolesList = res.data
+    },
+    async remoteTag (roles, id) {
+      // 弹框提示是否删除
+      const result = await this.$confirm('是否删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'waring'
+      }).catch(e => console.log(e))
+      if (result !== 'confirm') {
+        return this.$message.info('取消删除') // 结束函数运行
+      }
+      const { data: res } = await this.$http.delete(`roles/${roles}/rights/${id}`)
+      if (res.meta.status === 200) {
+        this.getRoles()
+        return this.$message.success('删除成功！')
+      }
+      this.$message.error('删除失败!')
+    }
+  },
+  mounted () {
+    this.getRoles()
   }
+}
 </script>
 <style>
   .el-tag {
