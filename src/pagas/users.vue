@@ -28,7 +28,7 @@
             <el-button type="warning" icon="el-icon-delete" @click="deleteUser(scope.row)"/>
             <!--          分配权限-->
             <el-tooltip effect="dark" content="分配角色" placement="top">
-              <el-button type="primary" icon="el-icon-aim"/>
+              <el-button type="primary" icon="el-icon-aim" @click="AssignRoles(scope.row)"/>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -92,6 +92,26 @@
       <el-button type="primary" @click="editUserConfirm()">确 定</el-button>
     </span>
   </el-dialog>
+  <!--  分类角色页面-->
+  <el-dialog title="分配角色" :visible.sync="assShowRoles" width="30%">
+    <el-form :model="assRolesForm" label-width="150px" label-position="center">
+      <el-form-item label="用户名 : ">
+        <el-input v-model="assRolesForm.username" :disabled="true" style="width: 80%"/>
+      </el-form-item>
+      <el-form-item label="角色名称 : ">
+        <el-input v-model="assRolesForm.role_name" :disabled="true" style="width: 80%"/>
+      </el-form-item>
+      <el-form-item label="分配为 : ">
+        <el-select v-model="rolesId" placeholder="请选择">
+          <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="assShowRoles = false">取 消</el-button>
+      <el-button type="primary" @click="assRoles">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 <script>
@@ -133,6 +153,10 @@ export default {
       callback()
     }
     return {
+      rolesId: '',
+      rolesList: [],
+      assRolesForm: {},
+      assShowRoles: false,
       page: {
         query: '',
         pagenum: 1,
@@ -301,7 +325,6 @@ export default {
       }).then(() => {
         this.$http.delete('users/' + e.id).then(res => {
           this.$message.success('删除成功!')
-          console.log(res)
           this.getUserList()
         }).catch(() => {
           this.$message.error('删除失败!')
@@ -309,6 +332,23 @@ export default {
       }).catch(() => {
         this.$message.info('取消操作!')
       })
+    },
+    async AssignRoles (e) { // 分配角色
+      this.assShowRoles = true
+      this.assRolesForm = e
+      const { data: res } = await this.$http.get('/roles').catch(e)
+      if (res.meta.status === 200) {
+        this.rolesList = res.data
+      }
+    },
+    async assRoles () {
+      const { data: res } = await this.$http.put(`users/${this.assRolesForm.id}/role`, { rid: this.rolesId })
+      if (res.meta.status === 200) {
+        this.getUserList()
+        this.assShowRoles = false
+        return this.$message.success(res.meta.msg)
+      }
+      return this.$message.error(res.meta.msg)
     }
   }
 }
