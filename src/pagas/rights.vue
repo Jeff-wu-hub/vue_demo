@@ -32,7 +32,6 @@ export default {
   methods: {
     getRights (e) {
       this.$http.get('/rights/' + e).then(res => {
-        console.log(res.data.data)
         this.rightsList = res.data.data
       }).catch(() => {
         this.$message.error('请求失败')
