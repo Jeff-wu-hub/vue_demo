@@ -38,7 +38,7 @@
             </template>
           </el-table-column>
         </el-table>
-<!--        分页栏-->
+        <!--        分页栏-->
         <el-pagination
           background
           layout="prev,pager,next,total,jumper"
@@ -46,12 +46,38 @@
           :current-page="page.pagenum"
           @current-change="currentChange"/>
       </el-card>
+      <!--      编辑按钮弹出旷-->
+      <el-dialog :visible.sync="editDialog" title="编辑商品信息" width="30%">
+        <el-form label-position="left" label-width="80px" :model="formLabelAlign">
+          <el-form-item label="商品名称: " label-width="100px">
+            <el-input v-model="goodsRow.goods_name"/>
+          </el-form-item>
+          <el-form-item label="价格（元） : " label-width="100px">
+            <el-input v-model="goodsRow.goods_price"/>
+          </el-form-item>
+          <el-form-item label="数量(个) : " label-width="100px">
+            <el-input v-model="goodsRow.goods_number"/>
+          </el-form-item>
+          <el-form-item label="数量 : " label-width="100px">
+            <el-input v-model="goodsRow.goods_weight"/>
+          </el-form-item>
+          <el-form-item label="介绍 : " label-width="100px">
+            <el-input v-model="goodsRow.goods_introduce"/>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialog = false" size="small">取 消</el-button>
+          <el-button type="primary" @click="editConfirm" size="small">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      goodsRow: [], // 要修改的内容，编辑框
+      editDialog: false, // 编辑框弹出窗口
       addGoods: false, // 显示添加商品标识
       goodsList: [], // 商品列表
       page: { // 页面商品页码及显示数量
@@ -61,17 +87,34 @@ export default {
     }
   },
   methods: {
+    // 获取商品列表方法
     async getgoodsList () {
       const { data: res } = await this.$http.get('goods', {
         params: this.page
       })
       if (res.meta.status === 200) {
+        this.page.total = res.data.total
         this.goodsList = res.data.goods
       }
     },
     currentChange (e) { // 改变当前页码函数
       this.page.pagenum = e // 改变的页码
       this.getgoodsList()
+    },
+    // 操作栏之编辑按钮
+    edit (e) {
+      this.editDialog = true // 显示编辑dialog
+      this.goodsRow.goods_id = e.goods_id
+      this.goodsRow.goods_name = e.goods_name
+      this.goodsRow.goods_price = e.goods_price
+      this.goodsRow.goods_number = e.goods_number
+      this.goodsRow.goods_weight = e.goods_weight
+    },
+    // 编辑提交确认按钮
+    async editConfirm () {
+      console.log(this.goodsRow)
+      const { data: res } = this.$http.post(`goods/${this.goodsRow.goods_id}`, this.goodsRow)
+      console.log(res)
     }
   },
   mounted () {
