@@ -40,115 +40,149 @@
             <el-button type="primary" @click="confirmSubmmit">确 定</el-button>
           </span>
       </el-dialog>
-
     </el-card>
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        total: '',
-        cascaderProps: {
-          checkStrictly: true,
-          expandTrigger: 'hover',
-          value: 'cat_id',
-          label: 'cat_name',
-          children: 'children'
-        },
-        addTypeShow: false,
-        goodsType: {
-          id: []
-        },
-        subType: {
-          cat_name: '',
-          cat_pid: 0,
-          cat_level: 0
-        },
-        goodsTypeOptions: [],
-        rules: {
-          cat_name: [
-            {
-              required: true,
-              message: '请输入分类名称',
-              trigger: 'blur'
-            }
-          ]
-        },
-        page: {
-          type: 3,
-          pagenum: 1,
-          pagesize: 5
-        },
-        form: [],
-        columns: [{
-          label: '分类名称',
-          prop: 'cat_name'
-        }, {
-          label: '是否有效',
-          type: 'template',
-          template: 'isok'
-        }, {
-          label: '排序',
-          type: 'template',
-          template: 'order'
-        }, {
-          label: '操作',
-          type: 'template',
-          template: 'control'
-        }]
-      }
-    },
-    methods: {
-      getCategories: async function () {
-        console.log(this.page)
-        const { data: e } = await this.$http.get('categories', {
-          params: this.page
-        })
-        if (e.meta.status === 200) {
-          this.form = e.data.result
-          this.total = e.data.total
-        }
+export default {
+  data () {
+    return {
+      total: '',
+      cascaderProps: {
+        checkStrictly: true,
+        expandTrigger: 'hover',
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
       },
-      currentChange (e) {
-        this.page.pagenum = e
-        this.getCategories()
+      addTypeShow: false,
+      goodsType: {
+        id: []
       },
-      addType () {
-        this.addTypeShow = true
-        this.getParantesIdList()
+      subType: {
+        cat_name: '',
+        cat_pid: 0,
+        cat_level: 0
       },
-      async getParantesIdList () {
-        const { data: res } = await this.$http.get('categories', {
-          params: {
-            type: 2
+      goodsTypeOptions: [],
+      rules: {
+        cat_name: [
+          {
+            required: true,
+            message: '请输入分类名称',
+            trigger: 'blur'
           }
-        })
-        this.goodsTypeOptions = res.data
+        ]
       },
-      handleChange () {
-        if (this.goodsType.id.length > 0) {
-          this.subType.cat_pid = this.goodsType.id[this.goodsType.id.length - 1]
-          this.subType.cat_level = this.goodsType.id.length
-        } else {
-          this.subType.cat_pid = 0
-          this.subType.cat_level = 0
-        }
+      page: {
+        type: 3,
+        pagenum: 1,
+        pagesize: 5
       },
-      async confirmSubmmit () {
-        const { data: res } = await this.$http.post('categories', this.subType)
-        if (res.meta.status === 201) {
-          this.getCategories()
-          this.addTypeShow = false
-          this.$refs.ruleForm.resetFields()
-        }
-        return this.$message.info(res.meta.msg)
+      form: [],
+      columns: [{
+        label: '分类名称',
+        prop: 'cat_name'
+      }, {
+        label: '是否有效',
+        type: 'template',
+        template: 'isok'
+      }, {
+        label: '排序',
+        type: 'template',
+        template: 'order'
+      }, {
+        label: '操作',
+        type: 'template',
+        template: 'control'
+      }]
+    }
+  },
+  methods: {
+    getCategories: async function () {
+      const { data: e } = await this.$http.get('categories', {
+        params: this.page
+      })
+      if (e.meta.status === 200) {
+        this.form = e.data.result
+        this.total = e.data.total
       }
     },
-    mounted () {
+    currentChange (e) {
+      this.page.pagenum = e
       this.getCategories()
+    },
+    addType () {
+      this.addTypeShow = true
+      this.getParantesIdList()
+    },
+    async getParantesIdList () {
+      const { data: res } = await this.$http.get('categories', {
+        params: {
+          type: 2
+        }
+      })
+      this.goodsTypeOptions = res.data
+    },
+    handleChange () {
+      if (this.goodsType.id.length > 0) {
+        this.subType.cat_pid = this.goodsType.id[this.goodsType.id.length - 1]
+        this.subType.cat_level = this.goodsType.id.length
+      } else {
+        this.subType.cat_pid = 0
+        this.subType.cat_level = 0
+      }
+    },
+    async confirmSubmmit () {
+      const { data: res } = await this.$http.post('categories', this.subType)
+      if (res.meta.status === 201) {
+        this.getCategories()
+        this.addTypeShow = false
+        this.$refs.ruleForm.resetFields()
+      }
+      return this.$message.info(res.meta.msg)
+    },
+    async editInfo (e) {
+      const result = await this.$prompt('输入要修改的名字', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValue: e.cat_name
+      }).catch(() => {
+        return this.$message.info('取消编辑')
+      })
+      if (result.action === 'confirm') {
+        const { data: res } = await this.$http.put(`categories/${e.cat_id}`, { cat_name: result.value })
+        console.log(res)
+        if (res.meta.status === 200) {
+          return this.$message.success(res.meta.msg)
+        } else {
+          return this.$message.error(res.meta.msg)
+        }
+      }
+    },
+    async deleteInfo (e) {
+      const result = await this.$confirm(`确定删除：${e.cat_name}`, '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(() => {
+        return this.$message.info('取消操作')
+      })
+      if (result === 'confirm') {
+        const { data: res } = await this.$http.delete(`categories/${e.cat_id}`)
+        if (res.meta.status === 200) {
+          this.getCategories()
+          return this.$message.success(res.meta.msg)
+        } else {
+          return this.$message.error(res.meta.msg)
+        }
+      }
     }
+  },
+  mounted () {
+    this.getCategories()
   }
+}
 </script>
 <style>
   .el-cascader {
