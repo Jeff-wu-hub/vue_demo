@@ -1,5 +1,4 @@
 <template>
-  <div><h3>数据统计</h3></div>
   <div style="width: 100%;height: 100%;overflow: hidden;">
     <h3 style="text-align: center;font-size: 50px">数据报表</h3>
     <div id="charts"/>
