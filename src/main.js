@@ -84,6 +84,7 @@ import {
 } from 'element-ui'
 import qs from 'qs'
 import axios from 'axios'
+import echarts from 'echarts'
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
@@ -163,8 +164,9 @@ Vue.use(Calendar)
 Vue.use(Backtop)
 Vue.use(PageHeader)
 Vue.use(CascaderPanel)
-
+Vue.prototype.$echarts = echarts
 Vue.use(Loading.directive)
+
 Vue.prototype.$qs = qs
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox
