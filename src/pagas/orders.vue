@@ -27,8 +27,7 @@
         <el-table-column label="下单时间" align="center" prop="create_time"/>
         <el-table-column label="操作" align="center">
           <template slot-scope="scops">
-            <el-button icon="el-icon-edit" size="small" type="primary" title="修改订单地址"
-                       @click="showDialog = !showDialog"/>
+            <el-button icon="el-icon-edit" size="small" type="primary" title="修改订单地址" @click="showDialog = !showDialog"/>
             <el-button @click="deleteInfo(scops.row)" icon="el-icon-position" size="small" type="warning"/>
           </template>
         </el-table-column>
@@ -44,45 +43,39 @@
       </el-pagination>
     </el-card>
     <el-dialog width="30%" :visible="showDialog" title="修改地址">
-      <el-form :rules="rules" ref="selectform">
+      <el-form :rules="rules" ref="selectform" :model="address">
         <el-form-item label="省市区/县 ： " label-width="150px" prop="address1">
-          <el-cascader v-model="value" :options="address.address1" :props="cascade" @change="caChange"
-                       style="width: 60%"/>
+          <el-cascader v-model="address.address1" :options="value" :props="cascade" @change="caChange" style="width: 60%"/>
         </el-form-item>
         <el-form-item label="详细地址 ： " label-width="150px" prop="address2">
-          <el-cascader v-model="value" :options="options" :props="cascade" @change="caChange" style="width: 60%"/>
+          <el-input v-model="address.address2" style="width: 60%"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="confirmEdit">确 定</el-button>
+        <el-button type="primary" @click="showDialog = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
+import provice from '@/plugins/city_data2017_element.js'
 export default {
   data () {
     return {
       rules: {
-        address1: [{
-          required: true,
-          message: '请选择省市区/县',
-          trigger: 'blur'
-        }],
-        address2: [{
-          required: true,
-          message: '请填写详细地址',
-          trigger: 'blur'
-        }]
+        address1: [{ required: true, message: '请选择省市区/县', trigger: 'blur' }],
+        address2: [{ required: true, message: '请填写详细地址', trigger: 'blur' }]
       },
       address: {
         address1: [],
         address2: ''
       },
-      showDialog: true,
-      cascade: {},
-      value: '',
+      showDialog: false,
+      cascade: {
+        expandTrigger: true
+      },
+      value: provice,
       total: '',
       FormOrder: [], // 表单信息
       page: {
@@ -97,6 +90,7 @@ export default {
       const { data: res } = await this.$http.get('orders', {
         params: this.page
       })
+      this.formatData(res.data.goods)
       this.FormOrder = res.data.goods
       this.total = res.data.total
     },
@@ -107,9 +101,13 @@ export default {
       this.page.pagesize = e
       this.getOrder()
     },
-    confirmEdit () {
+    formatData (time) {
+      time.forEach((e) => {
+        e.create_time = new Date(e.create_time).toLocaleString()
+      })
     },
     caChange () {
+      console.log(this.address)
     }
   },
   mounted () {
