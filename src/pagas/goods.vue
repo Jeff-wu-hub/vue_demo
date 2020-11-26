@@ -43,6 +43,7 @@
           background
           layout="prev,pager,next,total,jumper"
           :total="page.total"
+          :page-size="page.pagesize"
           :current-page="page.pagenum"
           @current-change="currentChange"/>
       </el-card>
@@ -93,7 +94,9 @@ export default {
         params: this.page
       })
       if (res.meta.status === 200) {
+        console.log(res.data.goods)
         this.page.total = res.data.total
+        this.formatData(res.data.goods)
         this.goodsList = res.data.goods
       }
     },
@@ -115,6 +118,11 @@ export default {
       console.log(this.goodsRow)
       const { data: res } = this.$http.post(`goods/${this.goodsRow.goods_id}`, this.goodsRow)
       console.log(res)
+    },
+    formatData (time) {
+      time.forEach((e) => {
+        e.add_time = new Date(e.add_time).toLocaleString()
+      })
     }
   },
   mounted () {
