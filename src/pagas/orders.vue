@@ -61,60 +61,60 @@
   </div>
 </template>
 <script>
-export default {
-  data () {
-    return {
-      rules: {
-        address1: [{
-          required: true,
-          message: '请选择省市区/县',
-          trigger: 'blur'
-        }],
-        address2: [{
-          required: true,
-          message: '请填写详细地址',
-          trigger: 'blur'
-        }]
-      },
-      address: {
-        address1: [],
-        address2: ''
-      },
-      showDialog: true,
-      cascade: {},
-      value: '',
-      total: '',
-      FormOrder: [], // 表单信息
-      page: {
-        pagenum: 1,
-        pagesize: 5,
-        query: ''
+  export default {
+    data () {
+      return {
+        rules: {
+          address1: [{
+            required: true,
+            message: '请选择省市区/县',
+            trigger: 'blur'
+          }],
+          address2: [{
+            required: true,
+            message: '请填写详细地址',
+            trigger: 'blur'
+          }]
+        },
+        address: {
+          address1: [],
+          address2: ''
+        },
+        showDialog: true,
+        cascade: {},
+        value: '',
+        total: '',
+        FormOrder: [], // 表单信息
+        page: {
+          pagenum: 1,
+          pagesize: 5,
+          query: ''
+        }
       }
-    }
-  },
-  methods: {
-    async getOrder () {
-      const { data: res } = await this.$http.get('orders', {
-        params: this.page
-      })
-      this.FormOrder = res.data.goods
-      this.total = res.data.total
     },
-    handleCurrentChange () {
+    methods: {
+      async getOrder () {
+        const { data: res } = await this.$http.get('orders', {
+          params: this.page
+        })
+        this.FormOrder = res.data.goods
+        this.total = res.data.total
+      },
+      handleCurrentChange () {
+        this.getOrder()
+      },
+      handleSizeChange (e) {
+        this.page.pagesize = e
+        this.getOrder()
+      },
+      confirmEdit () {
+      },
+      caChange () {
+      }
+    },
+    mounted () {
       this.getOrder()
-    },
-    handleSizeChange (e) {
-      this.page.pagesize = e
-      this.getOrder()
-    },
-    confirmEdit () {
-    },
-    caChange () {
     }
-  },
-  mounted () {
-    this.getOrder()
   }
-}
 </script>
 <style></style>
