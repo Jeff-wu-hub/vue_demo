@@ -28,7 +28,7 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scops">
             <el-button icon="el-icon-edit" size="small" type="primary" title="修改订单地址" @click="showDialog = !showDialog"/>
-            <el-button @click="viewOrder(scops.row)" icon="el-icon-position" size="small" type="warning"/>
+            <el-button @click="deleteInfo(scops.row)" icon="el-icon-position" size="small" type="warning"/>
           </template>
         </el-table-column>
       </el-table>
@@ -105,12 +105,10 @@ export default {
       time.forEach((e) => {
         e.create_time = new Date(e.create_time).toLocaleString()
       })
+    },
+    caChange () {
+      console.log(this.address)
     }
-    // bug 获取快递信息 node服务器会关闭
-    // async viewOrder (e) {
-    //   const { data: res } = await this.$http.get('/kuaidi/1106975712662')
-    //   console.log(res)
-    // }
   },
   mounted () {
     this.getOrder()

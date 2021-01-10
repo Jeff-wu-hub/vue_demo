@@ -127,7 +127,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-      console.log(res)
     },
     async handleInputConfirm (e) {
       this.inputVisible = false
@@ -160,8 +159,8 @@ export default {
     line-height: 30px;
   }
   .el-input{
-    padding: 0!important;
-    margin:0!important;
-    width: 150px!important;
+    /*padding: 0!important;*/
+    /*margin:0!important;*/
+    /*width: 150px!important;*/
   }
 </style>
